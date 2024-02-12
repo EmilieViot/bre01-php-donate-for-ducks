@@ -3,10 +3,20 @@
 /* global fetch */
 /* global URLSearchParams */
 
-const stripe;
+const stripe = Stripe('pk_test_51Oiv6gIVN6HV9GvVH1QhVGXWEm2QVLCHqobf3xA8GGVTqra8veVJWEj9aPkleWVLQ4WoMF92HpBDooANiEHYZvbY00BuKbbqxx');
+
+const amountInput = document.getElementById('montant-personnalise');
 
 let amount;
-initialize();
+
+amountInput.addEventListener('input', function () {
+  amount = parseFloat(amountInput.value);
+  console.log(amount)
+  if (amount >= 1) {
+    initialize();
+  }
+});
+
 
 let elements;
 
@@ -38,16 +48,16 @@ async function initialize() {
   buttonSubmit.querySelector("#button-text").textContent = "Don de " + amount + "€";
 }
 
-async function handleSubmit(e) {
-  e.preventDefault();
-  setLoading(true);
-
-  const { error } = await stripe.confirmPayment({
-    elements,
-    confirmParams: {
-      return_url: "",
-    },
-  });
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+  
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: "https://emilieviot.sites.3wa.io/php/bre01-php-donate-for-ducks/public/index.php",
+      },
+    });
 
   // This point will only be reached if there is an immediate error when
   // confirming the payment. Otherwise, your customer will be redirected to
